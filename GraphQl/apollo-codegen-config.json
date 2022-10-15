@@ -1,0 +1,28 @@
+{
+  "schemaName" : "Api",
+  "input" : {
+    "operationSearchPaths" : [
+      "*.graphql"
+    ],
+    "schemaSearchPaths" : [
+      "*.graphqls"
+    ]
+  },
+  "output" : {
+    "testMocks" : {
+      "none" : {
+      }
+    },
+    "schemaTypes" : {
+      "path" : "./Api",
+      "moduleType" : {
+        "swiftPackageManager" : {
+        }
+      }
+    },
+    "operations" : {
+      "relative" : {
+      }
+    }
+  }
+}

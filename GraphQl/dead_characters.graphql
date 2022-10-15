@@ -3,12 +3,19 @@ fragment characterFields on Character {
   status
   type
   image
+  id
 }
 
 query DeadCharacters {
   DeadCharacters: characters(filter: {status: "dead"}) {
-    results {
-      ...characterFields
-    }
+	results {
+	  ...characterFields
+	}
+  }
+}
+
+query CharWIthId($id: ID!) {
+  character(id: $id) {
+	...characterFields
   }
 }
