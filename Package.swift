@@ -32,6 +32,7 @@ let package = Package(
                 .product(name: "Api", package: "Api"),
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloSQLite", package: "apollo-ios"),
+                .product(name: "ApolloTestSupport", package: "apollo-ios"),
                 .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
             ]),
         .testTarget(
