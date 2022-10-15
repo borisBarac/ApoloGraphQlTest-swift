@@ -21,7 +21,8 @@
       }
     },
     "operations" : {
-      "relative" : {
+      "relative": {
+        "subpath": "Api/Sources"
       }
     }
   }
