@@ -1,0 +1,14 @@
+fragment characterFields on Character {
+  name
+  status
+  type
+  image
+}
+
+query DeadCharacters {
+  DeadCharacters: characters(filter: {status: "dead"}) {
+    results {
+      ...characterFields
+    }
+  }
+}
