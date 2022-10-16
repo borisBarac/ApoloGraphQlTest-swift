@@ -11,7 +11,7 @@
   "output" : {
     "testMocks" : {
       "absolute" : {
-        "path" : "../Tests/Mocks/GraphQL"
+        "path" : "../Tests/RMGraphQLTests/Generated"
       }
     },
     "schemaTypes" : {

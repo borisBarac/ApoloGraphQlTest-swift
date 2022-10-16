@@ -3,6 +3,4 @@ import XCTest
 
 final class AuthInterceptorTests: XCTestCase {
     var rmApi: RMApi!
-
-    
 }

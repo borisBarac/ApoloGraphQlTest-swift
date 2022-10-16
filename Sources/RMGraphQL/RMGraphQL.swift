@@ -52,7 +52,7 @@ private extension CashingStrategy {
     }
 }
 
-extension ApolloStore {
+private extension ApolloStore {
     static func createSqlCache() throws -> SQLiteNormalizedCache {
         let documentsPath = NSSearchPathForDirectoriesInDomains(
             .cachesDirectory,
