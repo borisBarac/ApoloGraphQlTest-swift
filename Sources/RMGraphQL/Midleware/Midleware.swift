@@ -9,19 +9,24 @@ struct NetworkInterceptorProvider: InterceptorProvider {
     private let store: ApolloStore
     private let client: URLSessionClient
     private let logger: Logger
+    private let authBlock: ((URLRequest) -> URLRequest)?
 
-    init(store: ApolloStore, client: URLSessionClient, logger: Logger) {
+    init(store: ApolloStore, client: URLSessionClient, logger: Logger, authBlock: ((URLRequest) -> URLRequest)?) {
         self.store = store
         self.client = client
         self.logger = logger
+        self.authBlock = authBlock
     }
 
     func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
+
+        let networkInterceptor: ApolloInterceptor = authBlock != nil ? AuthInterceptor(client: self.client, authBlock: authBlock) : NetworkFetchInterceptor(client: self.client)
+
         return [
             MaxRetryInterceptor(),
             CacheReadInterceptor(store: self.store),
             RequestLoggingInterceptor(logger: logger),
-            NetworkFetchInterceptor(client: self.client),
+            networkInterceptor,
             ResponseLoggingInterceptor(logger: logger),
             ResponseCodeInterceptor(),
             JSONResponseParsingInterceptor(),
