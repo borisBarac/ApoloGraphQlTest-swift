@@ -20,7 +20,6 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/SwiftyBeaver/SwiftyBeaver.git", .upToNextMajor(from: "1.9.0")),
         .package(name: "Api", path: "./GraphQl/Api"),
     ],
     targets: [
@@ -33,7 +32,6 @@ let package = Package(
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloSQLite", package: "apollo-ios"),
                 .product(name: "ApolloTestSupport", package: "apollo-ios"),
-                .product(name: "SwiftyBeaver", package: "SwiftyBeaver"),
             ]),
         .testTarget(
             name: "RMGraphQLTests",
