@@ -7,9 +7,17 @@ public struct RMApi {
     let apolloClient: ApolloClient
     let logger: Logger
 
-    public init(config: RMApiConfig) {
+    public init(config: RMApiConfig) throws {
         self.logger = Logger(loggingLevel: config.loggingLevel)
-        self.apolloClient = ApolloClient(url: config.endpont ?? rmApiEndpont  )
+
+        let store = ApolloStore(cache: try config.cashingStrategy.getCache() )
+
+        let client = URLSessionClient(sessionConfiguration: config.sessionConfiguration)
+        let provider = NetworkInterceptorProvider(store: store, client: client, logger: logger)
+
+        let url = config.endpont ?? rmApiEndpont
+        let requestChainTransport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
+        apolloClient =  ApolloClient(networkTransport: requestChainTransport, store: store)
     }
 
     public func fetchAllDeadCharacters() async throws -> GraphQLResult<DeadCharactersQuery.Data> {
@@ -28,8 +36,33 @@ public struct RMApi {
         } catch {
             throw RMError.asyncConvertionFailed
         }
-
-
     }
+}
 
+// MARK: - Private helpers
+
+private extension CashingStrategy {
+    func getCache() throws -> NormalizedCache {
+        switch self {
+        case .inMemory:
+            return InMemoryNormalizedCache()
+        case .sql:
+            return try ApolloStore.createSqlCache()
+        }
+    }
+}
+
+extension ApolloStore {
+    static func createSqlCache() throws -> SQLiteNormalizedCache {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .cachesDirectory,
+            .userDomainMask,
+            true
+        ).first!
+
+        let documentsURL = URL(fileURLWithPath: documentsPath)
+        let sqliteFileURL = documentsURL.appendingPathComponent("rm_api_apollo_db.sqlite")
+
+        return try SQLiteNormalizedCache(fileURL: sqliteFileURL)
+    }
 }

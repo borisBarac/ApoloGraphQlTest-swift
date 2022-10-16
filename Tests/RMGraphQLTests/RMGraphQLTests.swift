@@ -19,9 +19,17 @@ final class RMApiTests: XCTestCase {
         XCTAssertNotNil(data, "Data is NULL")
     }
 
+    func testInit() throws {
+        let config = RMApiConfig(endpont: rmApiEndpont, loggingLevel: .all, cashingStrategy: .inMemory)
+        let api = try? RMApi(config: config)
+        XCTAssertNotNil(api)
+    }
+
     // MARK: - Helpers
     func makeSUT() -> RMApi {
         let config = RMApiConfig(endpont: rmApiEndpont, loggingLevel: .all, cashingStrategy: .inMemory)
-        return RMApi(config: config)
+        let api = try? RMApi(config: config)
+        assert(api != nil, "COULD NOT MAKE SUT")
+        return api!
     }
 }
