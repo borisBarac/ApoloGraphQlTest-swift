@@ -21,6 +21,7 @@ final class RMApiTests: XCTestCase {
 
     // MARK: - Helpers
     func makeSUT() -> RMApi {
-        return RMApi()
+        let config = RMApiConfig(endpont: rmApiEndpont, loggingLevel: .all, cashingStrategy: .inMemory)
+        return RMApi(config: config)
     }
 }

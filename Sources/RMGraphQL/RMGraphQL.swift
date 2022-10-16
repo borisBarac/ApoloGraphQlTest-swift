@@ -1,12 +1,15 @@
 import Foundation
 import Apollo
+import ApolloSQLite
 import Api
 
 public struct RMApi {
     let apolloClient: ApolloClient
+    let logger: Logger
 
-    public init() {
-        self.apolloClient = ApolloClient(url: rmApiEndpont)
+    public init(config: RMApiConfig) {
+        self.logger = Logger(loggingLevel: config.loggingLevel)
+        self.apolloClient = ApolloClient(url: config.endpont ?? rmApiEndpont  )
     }
 
     public func fetchAllDeadCharacters() async throws -> GraphQLResult<DeadCharactersQuery.Data> {
