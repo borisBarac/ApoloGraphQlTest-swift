@@ -63,6 +63,10 @@ extension ApolloStore {
         let documentsURL = URL(fileURLWithPath: documentsPath)
         let sqliteFileURL = documentsURL.appendingPathComponent("rm_api_apollo_db.sqlite")
 
-        return try SQLiteNormalizedCache(fileURL: sqliteFileURL)
+        do {
+            return try SQLiteNormalizedCache(fileURL: sqliteFileURL)
+        } catch {
+            throw RMError.couldNotCreateSqlCache
+        }
     }
 }
