@@ -47,7 +47,6 @@ final class RMApiTests: XCTestCase {
         return api!
     }
 
-    // MARK: - Helpers
     func makeMockSUT(mockPass: Bool) -> RMApi {
         let mock = mockPass ? MockInterceptor.passMock : MockInterceptor.failMock
         let config = RMApiConfig(endpont: rmApiEndpont,

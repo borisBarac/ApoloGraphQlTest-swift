@@ -4,7 +4,6 @@ import XCTest
 final class AuthInterceptorTests: XCTestCase {
     var rmApi: RMApi!
 
-    #warning("SHOULD NOT RUN IN CI")
     func testAuthBockCalled() async throws {
         let exp = expectation(description: "AuthInterceptor expectation")
 
@@ -21,6 +20,5 @@ final class AuthInterceptorTests: XCTestCase {
 
         await waitForExpectations(timeout: 3)
     }
-
 
 }
