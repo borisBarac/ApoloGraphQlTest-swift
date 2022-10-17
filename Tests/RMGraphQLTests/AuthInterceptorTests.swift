@@ -5,10 +5,13 @@ final class AuthInterceptorTests: XCTestCase {
     var rmApi: RMApi!
 
     #warning("SHOULD NOT RUN IN CI")
-    func test() async throws {
+    func testAuthBockCalled() async throws {
         let exp = expectation(description: "AuthInterceptor expectation")
 
-        let config = RMApiConfig(endpont: rmApiEndpont, loggingLevel: .all, cashingStrategy: .inMemory)
+        let config = RMApiConfig(endpont: rmApiEndpont,
+                                 loggingLevel: .none,
+                                 cashingStrategy: .none,
+                                 mockInterceptor: MockInterceptor.passMock)
         let authBlock: AuthBlockType? = { _ in
             exp.fulfill()
         }
@@ -16,7 +19,7 @@ final class AuthInterceptorTests: XCTestCase {
         let rmApi = try RMApi(config: config, authBlock: authBlock)
         _ = try await rmApi.fetchAllDeadCharacters()
 
-        await waitForExpectations(timeout: 5)
+        await waitForExpectations(timeout: 3)
     }
 
 
