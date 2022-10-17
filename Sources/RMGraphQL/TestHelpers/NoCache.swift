@@ -1,5 +1,4 @@
 import Apollo
-import ApolloAPI
 
 public class NoCache: NormalizedCache {
 
