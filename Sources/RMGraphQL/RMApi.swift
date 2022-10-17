@@ -48,6 +48,8 @@ private extension CashingStrategy {
             return InMemoryNormalizedCache()
         case .sql:
             return try ApolloStore.createSqlCache()
+        case .none:
+            return NoCache()
         }
     }
 }

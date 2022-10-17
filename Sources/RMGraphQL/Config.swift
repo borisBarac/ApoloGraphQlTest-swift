@@ -3,6 +3,7 @@ import Foundation
 public enum CashingStrategy {
     case inMemory
     case sql
+    case none
 }
 
 public struct RMApiConfig {
