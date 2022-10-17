@@ -32,9 +32,12 @@ final class RMApiTests: XCTestCase {
     }
 
     func testMockFail() async throws {
-        rmApi = makeMockSUT(mockPass: true)
-        let data = try? await rmApi.fetchAllDeadCharacters()
-        XCTAssertNotNil(data, "Data is NULL")
+        rmApi = makeMockSUT(mockPass: false)
+        do {
+            let _ = try await rmApi.fetchAllDeadCharacters()
+        } catch(let error) {
+            XCTAssertNotNil(error)
+        }
     }
 
     // MARK: - Helpers
