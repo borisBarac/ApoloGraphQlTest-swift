@@ -11,15 +11,18 @@ public struct RMApiConfig {
     public let loggingLevel: LoggingLevel
     public let cashingStrategy: CashingStrategy
     public let sessionConfiguration: URLSessionConfiguration
+    public let mockInterceptor: MockInterceptor?
 
     public init(endpont: URL?,
                 loggingLevel: LoggingLevel,
                 cashingStrategy: CashingStrategy,
-                sessionConfiguration: URLSessionConfiguration = .default) {
+                sessionConfiguration: URLSessionConfiguration = .default,
+                mockInterceptor: MockInterceptor? = nil) {
         self.endpont = endpont
         self.loggingLevel = loggingLevel
         self.cashingStrategy = cashingStrategy
         self.sessionConfiguration = sessionConfiguration
+        self.mockInterceptor = mockInterceptor
     }
 
 }

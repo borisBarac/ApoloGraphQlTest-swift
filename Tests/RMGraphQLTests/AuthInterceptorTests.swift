@@ -9,9 +9,8 @@ final class AuthInterceptorTests: XCTestCase {
         let exp = expectation(description: "AuthInterceptor expectation")
 
         let config = RMApiConfig(endpont: rmApiEndpont, loggingLevel: .all, cashingStrategy: .inMemory)
-        let authBlock: ((URLRequest) -> URLRequest)? = { req in
+        let authBlock: AuthBlockType? = { _ in
             exp.fulfill()
-            return req
         }
 
         let rmApi = try RMApi(config: config, authBlock: authBlock)

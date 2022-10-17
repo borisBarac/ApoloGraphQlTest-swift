@@ -7,13 +7,13 @@ public struct RMApi {
     let apolloClient: ApolloClient
     let logger: Logger
 
-    public init(config: RMApiConfig, authBlock: ((URLRequest) -> URLRequest)? = nil) throws {
+    public init(config: RMApiConfig, authBlock: AuthBlockType? = nil) throws {
         self.logger = Logger(loggingLevel: config.loggingLevel)
 
         let store = ApolloStore(cache: try config.cashingStrategy.getCache() )
 
         let client = URLSessionClient(sessionConfiguration: config.sessionConfiguration)
-        let provider = NetworkInterceptorProvider(store: store, client: client, logger: logger, authBlock: authBlock)
+        let provider = NetworkInterceptorProvider(store: store, client: client, logger: logger, authBlock: authBlock, mockInterceptor: config.mockInterceptor)
 
         let url = config.endpont ?? rmApiEndpont
         let requestChainTransport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)

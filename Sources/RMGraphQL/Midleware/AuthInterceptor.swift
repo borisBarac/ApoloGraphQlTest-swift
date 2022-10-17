@@ -2,18 +2,19 @@ import Foundation
 import Apollo
 import ApolloAPI
 
-/// fork of NetworkFetchInterceptor with AUTH block
-/// NetworkFetchInterceptor is not open, so overide does not work
+public typealias AuthBlockType = ((AdditionalHeaders) -> ())
+
 class AuthInterceptor: ApolloInterceptor, Cancellable {
+    typealias AuthBlockType = ((AdditionalHeaders) -> ())
     let client: URLSessionClient
-    let authBlock: ((URLRequest) -> URLRequest)?
+    let authBlock: AuthBlockType?
 
     @Atomic private var currentTask: URLSessionTask?
 
     /// Designated initializer.
     ///
     /// - Parameter client: The `URLSessionClient` to use to fetch data
-    public init(client: URLSessionClient, authBlock: ((URLRequest) -> URLRequest)?) {
+    public init(client: URLSessionClient, authBlock: AuthBlockType?)  {
         self.client = client
         self.authBlock = authBlock
     }
@@ -23,57 +24,22 @@ class AuthInterceptor: ApolloInterceptor, Cancellable {
         request: HTTPRequest<Operation>,
         response: HTTPResponse<Operation>?,
         completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
+            authBlock?(request)
 
-            let urlRequest: URLRequest
-            do {
-                let req = try request.toURLRequest()
-                urlRequest = authBlock?(req) ?? req
-                
-            } catch {
-                chain.handleErrorAsync(error,
-                                       request: request,
-                                       response: response,
-                                       completion: completion)
-                return
-            }
+            chain.proceedAsync(request: request,
+                               response: response,
+                               completion: completion)
 
-            let task = self.client.sendRequest(urlRequest) { [weak self] result in
-                guard let self = self else {
-                    return
-                }
-
-                defer {
-                    self.$currentTask.mutate { $0 = nil }
-                }
-
-                guard !chain.isCancelled else {
-                    return
-                }
-
-                switch result {
-                case .failure(let error):
-                    chain.handleErrorAsync(error,
-                                           request: request,
-                                           response: response,
-                                           completion: completion)
-                case .success(let (data, httpResponse)):
-                    let response = HTTPResponse<Operation>(response: httpResponse,
-                                                           rawData: data,
-                                                           parsedResponse: nil)
-                    chain.proceedAsync(request: request,
-                                       response: response,
-                                       completion: completion)
-                }
-            }
-
-            self.$currentTask.mutate { $0 = task }
         }
 
     public func cancel() {
-        guard let task = self.currentTask else {
-            return
-        }
-
-        task.cancel()
     }
+}
+
+public protocol AdditionalHeaders {
+    var additionalHeaders: [String: String] { get set }
+}
+
+extension HTTPRequest: AdditionalHeaders {
+
 }
