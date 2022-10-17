@@ -6,16 +6,9 @@ public typealias AuthBlockType = ((AdditionalHeaders) -> ())
 
 class AuthInterceptor: ApolloInterceptor, Cancellable {
     typealias AuthBlockType = ((AdditionalHeaders) -> ())
-    let client: URLSessionClient
     let authBlock: AuthBlockType?
 
-    @Atomic private var currentTask: URLSessionTask?
-
-    /// Designated initializer.
-    ///
-    /// - Parameter client: The `URLSessionClient` to use to fetch data
-    public init(client: URLSessionClient, authBlock: AuthBlockType?)  {
-        self.client = client
+    public init(authBlock: AuthBlockType?)  {
         self.authBlock = authBlock
     }
 
